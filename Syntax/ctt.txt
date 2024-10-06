@@ -1,1 +1,0 @@
-- Penyesuaian dilakukan untuk skip 5.9 dan 5.10
