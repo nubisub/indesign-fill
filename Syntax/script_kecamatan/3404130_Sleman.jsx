@@ -43,7 +43,6 @@ function Main() {
 							"Golongan",
 							"Subsektor",
 							"Kelompok",
-							"Lampiran",
 						];
 
 						function containsKeyword(content) {
@@ -56,6 +55,14 @@ function Main() {
 						}
 
 						if (!containsKeyword(firstCellContent)) {
+							var bodyRowCount = table.bodyRowCount;
+							var lastIndex = bodyRowCount - 1;
+							var jmlrow = 25 - lastIndex;
+
+							for (var n = 0; n < jmlrow; n++) {
+								table.rows.add(LocationOptions.AFTER, table.rows[lastIndex]);
+								table.recompose();
+							}
 							firstCellContent = table.rows[3].cells[0].contents;
 							tablesIndex.push({
 								page: i + 1,
@@ -71,7 +78,6 @@ function Main() {
 		}
 	}
 
-	tablesIndex.splice(13, 2);
 	alert("banyak tabel di indesign : " + tablesIndex.length);
 
 	var dictKec = {
@@ -161,7 +167,7 @@ function Main() {
 		3404170003: "Glagah Harjo",
 		3404170004: "Kepuh Harjo",
 		3404170005: "Umbul Harjo",
-        3404130: "Sleman"
+		3404130: "Sleman",
 	};
 
 	alert("banyak file : " + excelFiles.length);
@@ -282,18 +288,6 @@ function Main() {
 	}
 }
 
-var table = app.selection[0].parentStory.tables[0];
-
-var bodyRowCount = table.bodyRowCount;
-
-var lastIndex = bodyRowCount - 1;
-var jmlrow = 25 - lastIndex;
-
-for (var n = 0; n < jmlrow; n++) {
-	table.rows.add(LocationOptions.AFTER, table.rows[lastIndex]);
-	table.recompose();
-}
-
 function GetDataFromExcelPC(excelFilePath, splitChar, sheetNumber) {
 	if (typeof splitChar === "undefined") var splitChar = ";";
 	if (typeof sheetNumber === "undefined") var sheetNumber = "1";
@@ -370,6 +364,7 @@ function contains(array, element) {
 }
 
 function replaceTableColumnDataFromHeader(csvData, indexTable, tables) {
+	// alert("Tabel ke-" + indexTable);
 	// progressInput(indexTable, tables.length);
 	var table = tables[indexTable].table;
 	if (table.parent instanceof TextFrame) {
@@ -385,7 +380,7 @@ function replaceTableColumnDataFromHeader(csvData, indexTable, tables) {
 	}
 	var lastChangedRow = -1;
 	var searchText = csvData[0];
-	table.rows[0].cells[0].contents = "Kecamatan\rDistrict";
+	// table.rows[0].cells[0].contents = "Desa/Kelurahan\rVillage/Urban Village";
 
 	// alert("sekarang tabel ke - " + indexTable);
 	var columnsProcessed = [];
@@ -396,6 +391,7 @@ function replaceTableColumnDataFromHeader(csvData, indexTable, tables) {
 			var headers = table.rows[2].cells;
 			for (var j = 0; j < headers.length; j++) {
 				var headerText = headers[j].contents;
+				// alert("header : " + headerText);
 				for (var k = 0; k < searchText.length; k++) {
 					// alert("header : "+ headerText);
 					// alert("search : " + searchText[k]);
@@ -419,6 +415,9 @@ function replaceTableColumnDataFromHeader(csvData, indexTable, tables) {
 										: integerPart;
 								}
 								if (cellContent === "0" || cellContent === "0,00") {
+									cellContent = "-";
+								}
+								if (cellContent === "") {
 									cellContent = "-";
 								}
 								table.rows[m].cells[j].contents = cellContent;
@@ -460,6 +459,9 @@ function replaceTableColumnDataFromHeader(csvData, indexTable, tables) {
 								if (cellContent === "0" || cellContent === "0,00") {
 									cellContent = "-";
 								}
+								if (cellContent === "") {
+									cellContent = "-";
+								}
 								table.rows[m].cells[j].contents = cellContent;
 
 								lastChangedRow = Math.max(lastChangedRow, m);
@@ -485,6 +487,7 @@ function replaceTableColumnDataFromHeader(csvData, indexTable, tables) {
 				}
 			}
 		}
+		// alert("Sisa data : " + remainingCSVData.join(","));
 		if (lastChangedRow !== -1) {
 			changeRowColor(table, lastChangedRow);
 			removeRowsAfter(table, lastChangedRow);
@@ -600,21 +603,6 @@ function showInitialDialog() {
 	};
 	initialDialog.show();
 }
-// function progressInput(onProgress, Total) {
-//   var dialog = new Window("dialog", "Progress Input");
-//   dialog.orientation = "column";
-//   dialog.alignChildren = ["fill", "top"];
-//   dialog.margins = 20;
-
-//   var messagePanel = dialog.add("panel", undefined, "Progress");
-//   messagePanel.orientation = "column";
-//   messagePanel.alignChildren = ["fill", "top"];
-//   messagePanel.margins = 15;
-
-//   messagePanel.add("statictext", undefined, "Progress Sedang di Tabel Ke-" + onProgress + " dari Total " + Total + " tabel.");
-
-//   dialog.show();
-// }
-
 alert("Selesai.");
+
 
