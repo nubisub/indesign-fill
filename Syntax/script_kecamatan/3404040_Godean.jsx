@@ -167,7 +167,7 @@ function Main() {
 		3404170003: "Glagah Harjo",
 		3404170004: "Kepuh Harjo",
 		3404170005: "Umbul Harjo",
-		3404040: "Godean",
+		3404040: "Kecamatan Godean"
 	};
 
 	alert("banyak file : " + excelFiles.length);
@@ -285,6 +285,31 @@ function Main() {
 			indexTableCSV,
 			tablesIndex
 		);
+	}
+	// Mengatur preferensi pencarian dan penggantian
+	app.findTextPreferences = NothingEnum.NOTHING;
+	app.changeTextPreferences = NothingEnum.NOTHING;
+
+	// Melakukan penggantian teks untuk setiap pasangan find/replace
+	app.findTextPreferences.findWhat = "Kokap";
+	app.changeTextPreferences.changeTo = "Godean";
+	document.changeText();
+
+	// Menghapus preferensi pencarian dan penggantian setelah selesai
+	app.findTextPreferences = NothingEnum.NOTHING;
+	app.changeTextPreferences = NothingEnum.NOTHING;
+
+	// change too in master page
+	var masterPages = doc.masterSpreads;
+	for (var i = 0; i < masterPages.length; i++) {
+		var masterPage = masterPages[i];
+		var allTextFrames = masterPage.textFrames.everyItem().getElements();
+		for (var j = 0; j < allTextFrames.length; j++) {
+			var textFrame = allTextFrames[j];
+			if (textFrame.contents.indexOf("Kokap") !== -1) {
+				textFrame.contents = textFrame.contents.replace("Kokap", "Godean");
+			}
+		}
 	}
 }
 
@@ -414,13 +439,25 @@ function replaceTableColumnDataFromHeader(csvData, indexTable, tables) {
 										? integerPart + "," + decimalPart
 										: integerPart;
 								}
-								if (cellContent === "0" || cellContent === "0,00") {
+								if (
+									cellContent === "0" ||
+									cellContent === "0,00" ||
+									cellContent === ""
+								) {
 									cellContent = "-";
 								}
-								if (cellContent === "") {
-									cellContent = "-";
-								}
+
 								table.rows[m].cells[j].contents = cellContent;
+
+								if (j === 0) {
+									table.rows[m].cells[j].paragraphs[0].justification =
+										Justification.LEFT_ALIGN;
+								} else {
+									table.rows[m].cells[j].paragraphs[0].justification =
+										Justification.CENTER_ALIGN;
+								}
+								// right indent 0
+								table.rows[m].cells[j].paragraphs[0].rightIndent = 0;
 
 								lastChangedRow = Math.max(lastChangedRow, m);
 							}
@@ -456,13 +493,22 @@ function replaceTableColumnDataFromHeader(csvData, indexTable, tables) {
 										? integerPart + "," + decimalPart
 										: integerPart;
 								}
-								if (cellContent === "0" || cellContent === "0,00") {
-									cellContent = "-";
-								}
-								if (cellContent === "") {
+								if (
+									cellContent === "0" ||
+									cellContent === "0,00" ||
+									cellContent === ""
+								) {
 									cellContent = "-";
 								}
 								table.rows[m].cells[j].contents = cellContent;
+								if (j === 0) {
+									table.rows[m].cells[j].paragraphs[0].justification =
+										Justification.LEFT_ALIGN;
+								} else {
+									table.rows[m].cells[j].paragraphs[0].justification =
+										Justification.CENTER_ALIGN;
+								}
+								table.rows[m].cells[j].paragraphs[0].rightIndent = 0;
 
 								lastChangedRow = Math.max(lastChangedRow, m);
 							}
@@ -603,6 +649,22 @@ function showInitialDialog() {
 	};
 	initialDialog.show();
 }
+// function progressInput(onProgress, Total) {
+//   var dialog = new Window("dialog", "Progress Input");
+//   dialog.orientation = "column";
+//   dialog.alignChildren = ["fill", "top"];
+//   dialog.margins = 20;
+
+//   var messagePanel = dialog.add("panel", undefined, "Progress");
+//   messagePanel.orientation = "column";
+//   messagePanel.alignChildren = ["fill", "top"];
+//   messagePanel.margins = 15;
+
+//   messagePanel.add("statictext", undefined, "Progress Sedang di Tabel Ke-" + onProgress + " dari Total " + Total + " tabel.");
+
+//   dialog.show();
+// }
+
 alert("Selesai.");
 
 
