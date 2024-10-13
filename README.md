@@ -6,7 +6,16 @@ Script untuk mengisi tabel di InDesign secara otomatis dari file Excel. Script i
 
 ## Workflow
 
-1. Karena data dari sipaling pusat gak difilter, maka kita filter dulu fren data yang mau diambil. Taruh sheet kec dan desa ke sheet 1 dan 2 (Untuk membuat per kecamatan).
-2. Pastikan jumlah dan susunan kolom cocok dengan templatenya.
-3. Jalankan [filter.ipynb](Data/filter.ipynb) untuk mengambil data yang diperlukan (sesuaikan kab yang diinginkan).
-4. Jalankan [scipt_generator.ipynb](Syntax/script_generator.ipynb) untuk menghasilkan script (per kecamatan) yang akan dijalankan di InDesign.
+### Filter Data
+
+1. Karena data dari sipaling pusat gak difilter, maka kita filter dulu fren data yang mau dipakai. Jalankan [filter.ipynb](Data/filter.ipynb) untuk mengambil data yang diperlukan (sesuaikan kab/kec yang diinginkan).
+2. Pastikan urutan file excel di folder urut sesuai tabel di InDesign.
+3. Pastikan jumlah dan susunan kolom sesuai dengan table di indesign.
+
+### Generate Script
+
+- Jalankan [scipt_generator.ipynb](Syntax/script_generator.ipynb) untuk menghasilkan script yang akan dijalankan di InDesign (sesuaikan kab/kec yang diinginkan).
+
+### Run Script
+
+- Jalankan script di indesign `Window > Utilities > Scripts`.

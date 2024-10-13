@@ -78,7 +78,7 @@ function Main() {
 		}
 	}
 
-	alert("banyak tabel di indesign : " + tablesIndex.length);
+	// alert("banyak tabel di indesign : " + tablesIndex.length);
 
 	var dictKec = {
 		3404010001: "Sumberrahayu",
@@ -170,7 +170,35 @@ function Main() {
 		3404040: "Kecamatan Godean"
 	};
 
-	alert("banyak file : " + excelFiles.length);
+	// Mengatur preferensi pencarian dan penggantian
+	app.findTextPreferences = NothingEnum.NOTHING;
+	app.changeTextPreferences = NothingEnum.NOTHING;
+
+	// Melakukan penggantian teks untuk setiap pasangan find/replace
+	app.findTextPreferences.findWhat = "Kokap";
+	app.changeTextPreferences.changeTo = "Godean";
+	document.changeText();
+
+	// Menghapus preferensi pencarian dan penggantian setelah selesai
+	app.findTextPreferences = NothingEnum.NOTHING;
+	app.changeTextPreferences = NothingEnum.NOTHING;
+
+	// change too in master page
+	var masterPages = doc.masterSpreads;
+	// change kokap to Godean in master page
+	for (var i = 0; i < masterPages.length; i++) {
+		var masterPage = masterPages[i];
+		var allTextFrames = masterPage.textFrames.everyItem().getElements();
+		for (var j = 0; j < allTextFrames.length; j++) {
+			var textFrame = allTextFrames[j];
+			// if in textFrame include "Kokap" then change to "Godean"
+			if (textFrame.contents.indexOf("Kokap") !== -1) {
+				textFrame.contents = textFrame.contents.replace("Kokap", "Godean");
+			}
+		}
+	}
+
+	// alert("banyak file : " + excelFiles.length);
 	for (var i = 0; i < excelFiles.length; i++) {
 		var filePath = excelFiles[i].fsName;
 		// alert(filePath);
@@ -285,31 +313,6 @@ function Main() {
 			indexTableCSV,
 			tablesIndex
 		);
-	}
-	// Mengatur preferensi pencarian dan penggantian
-	app.findTextPreferences = NothingEnum.NOTHING;
-	app.changeTextPreferences = NothingEnum.NOTHING;
-
-	// Melakukan penggantian teks untuk setiap pasangan find/replace
-	app.findTextPreferences.findWhat = "Kokap";
-	app.changeTextPreferences.changeTo = "Godean";
-	document.changeText();
-
-	// Menghapus preferensi pencarian dan penggantian setelah selesai
-	app.findTextPreferences = NothingEnum.NOTHING;
-	app.changeTextPreferences = NothingEnum.NOTHING;
-
-	// change too in master page
-	var masterPages = doc.masterSpreads;
-	for (var i = 0; i < masterPages.length; i++) {
-		var masterPage = masterPages[i];
-		var allTextFrames = masterPage.textFrames.everyItem().getElements();
-		for (var j = 0; j < allTextFrames.length; j++) {
-			var textFrame = allTextFrames[j];
-			if (textFrame.contents.indexOf("Kokap") !== -1) {
-				textFrame.contents = textFrame.contents.replace("Kokap", "Godean");
-			}
-		}
 	}
 }
 
@@ -458,6 +461,8 @@ function replaceTableColumnDataFromHeader(csvData, indexTable, tables) {
 								}
 								// right indent 0
 								table.rows[m].cells[j].paragraphs[0].rightIndent = 0;
+								// set last line right indent 0
+								table.rows[m].cells[j].paragraphs[0].lastLineIndent = 0;
 
 								lastChangedRow = Math.max(lastChangedRow, m);
 							}
@@ -509,6 +514,7 @@ function replaceTableColumnDataFromHeader(csvData, indexTable, tables) {
 										Justification.CENTER_ALIGN;
 								}
 								table.rows[m].cells[j].paragraphs[0].rightIndent = 0;
+								table.rows[m].cells[j].paragraphs[0].lastLineIndent = 0;
 
 								lastChangedRow = Math.max(lastChangedRow, m);
 							}
