@@ -264,7 +264,7 @@ function Main() {
 
 		var filteredData = [];
 		for (var m = 1; m < data.length; m++) {
-			if (data[m][kabIndex] === "3404040") {
+			if (data[m][kabIndex] === "3404030") {
 				filteredData.push(data[m]);
 			}
 		}
@@ -283,7 +283,7 @@ function Main() {
 
 		var filteredTotal = [];
 		for (var p = 1; p < total.length; p++) {
-			if (total[p][totalIndex] === "3404040") {
+			if (total[p][totalIndex] === "3404030") {
 				filteredTotal.push(total[p]);
 			}
 		}
